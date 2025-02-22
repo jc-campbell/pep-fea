@@ -1,0 +1,134 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version: 12                                     |
+|   \\  /    A nd           | Web:      www.openfoam.com                     |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+
+// 1. geometry
+geometry
+{
+    foil.stl
+    {
+        type triSurfaceMesh;
+        name foil;   // internal name used by snappy
+    }
+
+    // Optionally define other geometry for refinementBoxes or refinementRegions
+    // e.g., a "box" to refine near the free surface or around the foil’s wake
+    /*
+    refinementBox
+    {
+        type searchableBox;
+        min ( -1 -2 -0.2 );
+        max (  3  2  0.2 );
+    }
+    */
+}
+
+// 2. castellatedMeshControls
+castellatedMeshControls
+{
+    maxLocalCells           2000000;   // limit on local cell count in parallel
+    maxGlobalCells          4000000;   // overall limit
+    minRefinementCells      10;
+    maxLoadUnbalance        0.10;
+    nCellsBetweenLevels     3;
+
+    // surfaces to refine
+    refinementSurfaces
+    {
+        foil
+        {
+            level       (4 4);  // min and max refinement level
+        }
+    }
+
+    // region-wise refinement (optional)
+    refinementRegions
+    {
+        // Example: refine inside a box region around free surface or foil
+        /*
+        refinementBox
+        {
+            mode inside;
+            levels ((1E15 2));
+        }
+        */
+    }
+
+    // resolve holes or internal surfaces if needed
+    resolveFeatureAngle       30;   // angle for feature edge refinement
+
+    // Features for edge refinement (optional)
+    features
+    (
+        // e.g., eMesh files for edges
+    );
+
+    // locationInMesh
+    // A point inside the domain so snappy knows which cells to keep.
+    locationInMesh (0 0 0);
+
+    // allow free-standing cells near stl edges to be removed
+    allowFreeStandingZoneFaces true;
+}
+
+// 3. snapControls
+snapControls
+{
+    nSmoothPatch       3;
+    tolerance          2.0;
+    nSolveIter         30;
+    nRelaxIter         5;
+
+    // optional feature snapping
+    implicitFeatureSnap false;
+    explicitFeatureSnap true;
+    multiRegionFeatureSnap false;
+}
+
+// 4. addLayersControls (optional but recommended)
+addLayersControls
+{
+    relativeSizes             true;
+    layers
+    {
+        "foil.*"
+        {
+            nSurfaceLayers 5;  // number of layers around foil
+        }
+    }
+    expansionRatio             1.2;
+    finalLayerThickness        0.3;
+    minThickness               0.1;
+    nGrow                      0;
+    featureAngle               60;
+    slipFeatureAngle           30;
+    nRelaxIter                 5;
+    nSmoothSurfaceNormals      1;
+    nSmoothNormals             3;
+    nSmoothThickness           10;
+    maxFaceThicknessRatio      0.5;
+    maxThicknessToMedialRatio  0.3;
+    minMedianAxisAngle         90;
+}
+
+// Overall workflow
+meshQualityControls
+{
+    // standard settings to keep the mesh healthy
+    // e.g. maxNonOrtho, maxBoundarySkewness, etc.
+}
+
+// advanced flags
+debug 0;

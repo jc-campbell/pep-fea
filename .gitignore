@@ -18,7 +18,7 @@ __pycache__/
 *.so
 
 # Python virtual environments
-venv/
+.venv/
 ENV/
 env/
 
