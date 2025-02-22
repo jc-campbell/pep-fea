@@ -8,6 +8,8 @@
 
 ## Installation/Usage
 
+Before installing this repository, ensure that you have [OpenFOAM](https://www.openfoam.com/) installed on a machine you have access to.
+
 Clone the repository:
 
 ```bash
@@ -19,3 +21,7 @@ Create a virtual environment (recommended) and install dependencies:
 ```bash
 pip install
 ```
+
+This repository is currently set up to run the simulations on a remote linux-based server over SSH. Local and Windows support is... claimed to be in development.
+
+Once everything is installed, you should be able to use the `pipeline.ipynb` notebook to run anything in the `/cases` directory, or to build your own cases.
