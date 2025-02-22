@@ -1,0 +1,34 @@
+# Node modules
+node_modules/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variable files
+.env
+.env.*
+.env.local
+.env.*.local
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*.so
+
+# Python virtual environments
+venv/
+ENV/
+env/
+
+# Distribution / build directories
+dist/
+build/
+*.egg-info/
+
+# Operating system files
+.DS_Store
+
+# Other log files
+*.log
